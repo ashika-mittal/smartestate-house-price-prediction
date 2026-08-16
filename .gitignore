@@ -1,0 +1,28 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+.virtual_documents/
+
+# Local files
+.DS_Store
+*.log
+anaconda_projects/
+output/
+tmp/
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Local assistant configuration
+.agents/
+.claude/
+.codex/

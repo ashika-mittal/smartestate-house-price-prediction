@@ -1,0 +1,30 @@
+[theme]
+base = "light"
+primaryColor = "#0F5F9F"
+backgroundColor = "#F5F8FC"
+secondaryBackgroundColor = "#EDF4FA"
+textColor = "#142033"
+linkColor = "#0F5F9F"
+borderColor = "#D8E3ED"
+showWidgetBorder = true
+baseRadius = "12px"
+buttonRadius = "12px"
+font = "sans-serif"
+headingFont = "sans-serif"
+baseFontSize = 15
+baseFontWeight = 400
+headingFontSizes = ["38px", "26px", "20px", "16px", "14px", "12px"]
+headingFontWeights = [750, 700, 650, 600, 600, 600]
+linkUnderline = false
+
+blueColor = "#0F5F9F"
+greenColor = "#0F766E"
+orangeColor = "#B45309"
+redColor = "#B42318"
+grayColor = "#667085"
+
+chartCategoricalColors = ["#0F5F9F", "#0F8A77", "#4F7CAC", "#7A5AF8", "#B45309", "#B42318"]
+chartSequentialColors = ["#EEF5FB", "#D9EAF7", "#BDDAEF", "#92C3E2", "#63A7D2", "#388BC1", "#1F70A8", "#145B91", "#0F4C81", "#0A355B"]
+
+dataframeBorderColor = "#D9E3EC"
+dataframeHeaderBackgroundColor = "#EDF3F8"

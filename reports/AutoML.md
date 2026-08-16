@@ -1,0 +1,4 @@
+rf = create_model('rf')
+tuned_rf = tune_model(rf)
+
+PyCaret AutoML was applied to evaluate multiple regression algorithms using 5-fold cross-validation. Among all tested models, Linear Regression achieved the highest R² score of 0.8392, followed closely by Bayesian Ridge Regression (0.8391) and Ridge Regression (0.8388). Tree-based ensemble methods such as Random Forest and Extra Trees did not outperform Linear Regression. Hyperparameter tuning of Random Forest further reduced performance (R² = 0.7534), indicating that the original Linear Regression model remained the most suitable choice for this dataset.
