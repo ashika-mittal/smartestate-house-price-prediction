@@ -8,6 +8,8 @@ The application combines a trained regression model with structured filtering,
 semantic retrieval, and a Groq-hosted language model. Retrieved properties are
 historical dataset records—not live listings.
 
+**Live app:** [smartestate-house-price.streamlit.app](https://smartestate-house-price.streamlit.app/)
+
 ## Features
 
 - Bengaluru house-price estimation using Linear Regression
@@ -222,6 +224,9 @@ The current test suite covers prediction, mandatory retrieval filters, ranking,
 fallback retrieval, AI-response validation, and unsupported-claim handling.
 
 ## Deploying to Streamlit Community Cloud
+
+SmartEstate is deployed publicly at
+[smartestate-house-price.streamlit.app](https://smartestate-house-price.streamlit.app/).
 
 Push the project to GitHub, then create an app at
 [share.streamlit.io](https://share.streamlit.io/) with:
