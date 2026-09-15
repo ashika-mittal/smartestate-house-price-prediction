@@ -284,7 +284,8 @@ Instructions:
         model=GROQ_MODEL_NAME,
         messages=messages,
         temperature=0.0,
-        max_completion_tokens=2000,
+        reasoning_effort="low",
+        max_completion_tokens=4000,
     )
 
     draft = response.choices[0].message.content
@@ -328,7 +329,8 @@ Instructions:
             }
         ],
         temperature=0.0,
-        max_completion_tokens=2000,
+        reasoning_effort="low",
+        max_completion_tokens=4000,
     )
 
     corrected_draft = correction.choices[0].message.content
