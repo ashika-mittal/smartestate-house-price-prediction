@@ -1,7 +1,12 @@
+import logging
+
 import streamlit as st
 
-from src.assistant import generate_groq_response
+from src.assistant import build_safe_summary, generate_groq_response
 from src.resources import load_groq_client, load_reference_data
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 result = st.session_state.get("prediction_result")
@@ -152,12 +157,34 @@ if not comparables.empty:
             "Grounded only in the model estimate and ranked historical records."
         )
 
-        if not result["assistant_attempted"]:
+        assistant_response = result.get("assistant_response")
+        assistant_has_text = bool(
+            isinstance(assistant_response, str)
+            and assistant_response.strip()
+        )
+        assistant_state_incomplete = (
+            result.get("assistant_attempted")
+            and not assistant_has_text
+            and not result.get("assistant_error")
+        )
+        if assistant_state_incomplete:
+            result["assistant_attempted"] = False
+
+        if not result.get("assistant_attempted"):
             groq_client = load_groq_client()
-            result["assistant_attempted"] = True
+            result["assistant_error"] = None
+            result["assistant_is_fallback"] = False
 
             if groq_client is None:
-                result["assistant_error"] = "GROQ_API_KEY is missing from .env."
+                result["assistant_error"] = (
+                    "GROQ_API_KEY is not configured. Showing a grounded "
+                    "summary built directly from the ranked records."
+                )
+                result["assistant_response"] = build_safe_summary(
+                    predicted_price,
+                    comparables,
+                )
+                result["assistant_is_fallback"] = True
             else:
                 try:
                     with st.spinner("Generating your grounded comparison..."):
@@ -175,20 +202,66 @@ if not comparables.empty:
                             retrieved_properties=comparables,
                         )
                 except Exception:
+                    LOGGER.exception("Groq comparison generation failed")
                     result["assistant_error"] = (
-                        "The AI comparison could not be generated. The estimate "
-                        "and historical matches remain available."
+                        "Live AI generation is temporarily unavailable. Showing "
+                        "a grounded summary built directly from the ranked records."
                     )
+                    result["assistant_response"] = build_safe_summary(
+                        predicted_price,
+                        comparables,
+                    )
+                    result["assistant_is_fallback"] = True
 
+            assistant_response = result.get("assistant_response")
+            assistant_has_text = bool(
+                isinstance(assistant_response, str)
+                and assistant_response.strip()
+            )
+            if not assistant_has_text:
+                result["assistant_error"] = (
+                    result.get("assistant_error")
+                    or "The AI service returned an empty response. Showing a "
+                    "grounded summary built directly from the ranked records."
+                )
+                result["assistant_response"] = build_safe_summary(
+                    predicted_price,
+                    comparables,
+                )
+                result["assistant_is_fallback"] = True
+
+            result["assistant_attempted"] = True
             st.session_state.prediction_result = result
+
+        if result.get("assistant_error"):
+            st.warning(
+                result["assistant_error"],
+                icon=":material/info:",
+            )
 
         if result.get("assistant_response"):
             st.markdown(result["assistant_response"])
         else:
             st.error(
-                result.get("assistant_error", "AI comparison is unavailable."),
+                result.get("assistant_error") or "AI comparison is unavailable.",
                 icon=":material/cloud_off:",
             )
+
+        if result.get("assistant_is_fallback") or (
+            result.get("assistant_error")
+            and not result.get("assistant_response")
+        ):
+            if st.button(
+                "Retry AI comparison",
+                icon=":material/refresh:",
+                key="retry_ai_comparison",
+            ):
+                result["assistant_attempted"] = False
+                result["assistant_response"] = None
+                result["assistant_error"] = None
+                result["assistant_is_fallback"] = False
+                st.session_state.prediction_result = result
+                st.rerun()
 
 with st.container(horizontal=True, horizontal_alignment="right"):
     if st.button(

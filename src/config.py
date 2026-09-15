@@ -9,6 +9,8 @@ DATA_PATH = BASE_DIR / "Data" / "processed" / "clean_house_data.csv"
 ENV_PATH = BASE_DIR / ".env"
 
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
-GROQ_MODEL_NAME = "llama-3.1-8b-instant"
+# Groq retired llama-3.1-8b-instant. GPT-OSS 20B is its recommended
+# production replacement and is available through the same chat API.
+GROQ_MODEL_NAME = "openai/gpt-oss-20b"
 
 DEFAULT_TOP_K = 5
